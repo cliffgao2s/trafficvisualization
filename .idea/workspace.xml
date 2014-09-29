@@ -31,7 +31,7 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="405" max-vertical-offset="6780">
+            <state vertical-scroll-proportion="-0.0" vertical-offset="405" max-vertical-offset="6780">
               <caret line="27" column="28" selection-start-line="27" selection-start-column="28" selection-end-line="27" selection-end-column="28" />
               <folding />
             </state>
@@ -81,6 +81,9 @@
   <component name="FrameworkCommandLineHistory">
     <commandsHistory>
       <command text="git remote add origin git@github.com:yzh0304/trafficvisualization.git" />
+      <command text="git add ." />
+      <command text="git commit -m 'add files'" />
+      <command text="git push -u origin master -f" />
     </commandsHistory>
   </component>
   <component name="HighlightingSettingsPerFile">
@@ -384,6 +387,14 @@
             <marker date="1411647241000" expanded="true" signature="883:970" placeholder="SELECT * FRO..HTTP_MESSAGE..." />
             <marker date="1411647241000" expanded="true" signature="1076:1151" placeholder="SELECT * FRO..HTTP_MESSAGE..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="381">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
