@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tree</title>
+    <!--引入bootstrap-->
+    <link href="./css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <!--引入index.css-->
+    <link href="./css/index.css" rel="stylesheet" type="text/css"/>
+    <!--引入jQuery-->
+    <script src="./js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#search').click(function(){
+                var type = $('input[name="tv_type_group"]:checked').val();
+                var statusCode = $('input[name="tv_status_code_group"]:checked').val();
+                var sourceIP = $('#sourceIP').val();
+                var destinationIP = $('#destinationIP').val();
+                var host = $('#host').val();
+                var requestUrl= $('#requestUrl').val();
+                var time = $('#time').val();
+                var resultLimit = $('#result_limit').val();
+                var contentType = $('#content_type').val();
+
+                $.ajax( {
+                    type : 'post',
+                    url : './haoqicat.php',
+                    data : {
+                        'type':type,
+                        'statusCode':statusCode,
+                        'sourceIP':sourceIP,
+                        'destinationIP':destinationIP,
+                        'host':host,
+                        'requestUrl':requestUrl,
+                        'time':time,
+                        'resultLimit':resultLimit,
+                        'contentType':contentType
+                    },
+                    dataType : 'json',
+                    success : function(data) {
+                        // 数组清空
+                        treeData.length = 0;
+                        // 添加元素
+                        treeData.push(data);
+                        root = treeData[0];
+                        root.x0 = height / 2;
+                        root.y0 = 0;
+                        // 更新
+                        update(root);
+                        alert(treeData[0].name)
+                    },
+                    error : function(data) {
+                       alert('出错了...');
+                    }
+                });
+
+
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="container-fluid">
+    <!--导航栏-->
+    <div class="masthead">
+        <h3 class="muted">流量可视化系统(TrafficVisualization System)</h3>
+
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="container">
+                    <ul class="nav">
+                        <li class="active"><a href="#">HTTP可视化</a></li>
+                        <li><a href="#">XX可视化</a></li>
+                        <li><a href="#">YY可视化</a></li>
+                        <li><a href="#">系统配置</a></li>
+                        <li><a href="#">操作指南</a></li>
+                        <li><a href="#">关于</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /.navbar -->
+    </div>
+    <!--导航栏结束-->
+    <div class="row-fluid">
+        <!--查询控制区域-->
+        <div class="span4">
+
+            <!--<form class="form-horizontal" action="#" method="post">-->
+                <fieldset>
+                    <div class="control-group">
+                        <label class="control-label">类型</label>
+
+                        <div class="controls">
+                            <!-- Inline Radios -->
+                            <label class="radio inline">
+                                <input type="radio" value="0 只有请求" name="tv_type_group">
+                                只有请求
+                            </label>
+                            <label class="radio inline">
+                                <input type="radio" value="1 只有响应" name="tv_type_group">
+                                只有响应
+                            </label>
+                            <label class="radio inline">
+                                <input type="radio" value="2 请求和响应" name="tv_type_group" checked="checked">
+                                请求和响应
+                            </label>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">响应码</label>
+
+                        <div class="controls">
+                            <!-- Inline Radios -->
+                            <label class="radio inline">
+                                <input type="radio" value="200" name="tv_status_code_group" checked="checked">
+                                200
+                            </label>
+                            <label class="radio inline">
+                                <input type="radio" value="304" name="tv_status_code_group">
+                                304
+                            </label>
+                            <label class="radio inline">
+                                <input type="radio" value="404" name="tv_status_code_group">
+                                404
+                            </label>
+                            <label class="radio inline">
+                                <input type="radio" value="503" name="tv_status_code_group">
+                                503
+                            </label>
+                            <label class="radio inline">
+                                <input type="radio" value="其他" name="tv_status_code_group">
+                                其他
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+
+                        <!-- Text input-->
+                        <label class="control-label" for="sourceIP">源IP</label>
+
+                        <div class="controls">
+                            <input type="text" id="sourceIP" name="sourceIP" placeholder="如:37.58.100.180"
+                                   class="input-xlarge">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+
+                        <!-- Text input-->
+                        <label class="control-label" for="destinationIP">目的IP</label>
+
+                        <div class="controls">
+                            <input type="text" id="destinationIP" name="destionationIP" placeholder="如:202.195.40.52"
+                                   class="input-xlarge">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+
+                        <!-- Text input-->
+                        <label class="control-label" for="host">Host</label>
+
+                        <div class="controls">
+                            <input type="text" id="host" name="host" placeholder="域名或IP" class="input-xlarge">
+
+                            <p class="help-block"></p>
+                        </div>
+                    </div>
+                    <div class="control-group">
+
+                        <!-- Text input-->
+                        <label class="control-label" for="requestUrl">请求路径</label>
+
+                        <div class="controls">
+                            <input type="text" id="requestUrl" name="requestUrl" placeholder="如:/index.html"
+                                   class="input-xlarge">
+
+                        </div>
+                    </div>
+                    <div class="control-group">
+
+                        <!-- Text input-->
+                        <label class="control-label" for="time">时间段选择</label>
+
+                        <div class="controls">
+                            <input type="text" id="time" name="time" placeholder="时间格式201409090800"
+                                   class="input-xlarge">
+                        </div>
+                    </div>
+                    <div class="control-group">
+
+                        <!-- Select Basic -->
+                        <label class="control-label">结果数量</label>
+
+                        <div class="controls">
+                            <select size="1" name="result_limit" id="result_limit" class="input-xlarge">
+                                <option>10</option>
+                                <option>20</option>
+                                <option>30</option>
+                                <option>无限制</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="control-group">
+
+                        <!-- Select Basic -->
+                        <label class="control-label">内容类型</label>
+
+                        <div class="controls">
+                            <select size="1" name="content_type" id="content_type" class="input-xlarge">
+                                <option>All不限</option>
+                                <option>Image类型</option>
+                                <option>Text类型</option>
+                                <option>Application类型</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label"></label>
+
+                        <!-- Button -->
+                        <div class="controls">
+                            <button id="search" class="btn btn-inverse">查询</button>
+                        </div>
+                    </div>
+
+                </fieldset>
+            <!--</form>-->
+
+        </div>
+        <!--TreeView显示区域-->
+        <div class="span8">
+        </div>
+    </div>
+</div>
+<!--引入d3-->
+<script src="./js/d3.v3.min.js"></script>
+<script type="text/javascript">
+var treeData = [
+    {
+        "name": "210.28.129.3",
+        "parent": null,
+        "children": [
+            {
+                "parent": "210.28.129.3",
+                "name": "66.222.224.202",
+                "ID": "259458",
+                "Type": "2",
+                "BeginTime": "2014-7-13 23:29:37",
+                "BeginMicrosecond": "159070",
+                "EndTime": "2014-7-13 23:29:37",
+                "EndMicrosecond": "160254",
+                "SourceIP": "66.222.224.202",
+                "SourcePort": "58021",
+                "DestinationIP": "210.28.129.3",
+                "DestinationPort": "80",
+                "Method": "GET",
+                "RequestUrl": "/download/styles/style0.css",
+                "Version": "HTTP/1.1",
+                "ReasonPhrase": "Not Modified",
+                "Host": "bbs.nju.edu.cn",
+                "UserAgent": "Internet Explorer 11 Windows 7(Microsoft Corporation)",
+                "Server": "nginx/0.8.54",
+                "ContentType": "Unkown"
+            }
+        ]
+    }
+];
+
+// ************** Generate the tree diagram  *****************
+var margin = {top: 20, right: 120, bottom: 20, left: 120},
+        width = 960 - margin.right - margin.left,
+        height = 500 - margin.top - margin.bottom;
+
+var i = 0,
+        duration = 750,
+        root;
+
+var tree = d3.layout.tree()
+        .size([height, width]);
+
+var diagonal = d3.svg.diagonal()
+        .projection(function (d) {
+            return [d.y, d.x];
+        });
+
+var svg = d3.select(".span8").append("svg")
+        .attr("width", width + margin.right + margin.left)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+root = treeData[0];
+root.x0 = height / 2;
+root.y0 = 0;
+
+update(root);
+
+// d3.select(self.frameElement).style("height", "500px");
+
+function update(source) {
+
+    // Compute the new tree layout.
+    var nodes = tree.nodes(root).reverse(),
+            links = tree.links(nodes);
+
+    // Normalize for fixed-depth.
+    nodes.forEach(function (d) {
+        d.y = d.depth * 180;
+    });
+
+    // Update the nodes…
+    var node = svg.selectAll("g.node")
+            .data(nodes, function (d) {
+                return d.id || (d.id = ++i);
+            });
+
+    // Enter any new nodes at the parent's previous position.
+    var nodeEnter = node.enter().append("g")
+            .attr("class", "node")
+            .attr("transform", function (d) {
+                return "translate(" + source.y0 + "," + source.x0 + ")";
+            })
+            .on("click", click);
+
+    nodeEnter.append("circle")
+            .attr("r", 1e-6)
+            .style("fill", function (d) {
+                return d._children ? "lightsteelblue" : "#fff";
+            });
+
+    nodeEnter.append("text")
+            .attr("x", function (d) {
+                return d.children || d._children ? -13 : 13;
+            })
+            .attr("dy", ".35em")
+            .attr("text-anchor", function (d) {
+                return d.children || d._children ? "end" : "start";
+            })
+            .text(function (d) {
+                return d.name;
+            })
+            .style("fill-opacity", 1e-6);
+
+    // Transition nodes to their new position.
+    var nodeUpdate = node.transition()
+            .duration(duration)
+            .attr("transform", function (d) {
+                return "translate(" + d.y + "," + d.x + ")";
+            });
+
+    nodeUpdate.select("circle")
+            .attr("r", 10)
+            .style("fill", function (d) {
+                return d._children ? "lightsteelblue" : "#fff";
+            });
+
+    nodeUpdate.select("text")
+            .style("fill-opacity", 1);
+
+    // Transition exiting nodes to the parent's new position.
+    var nodeExit = node.exit().transition()
+            .duration(duration)
+            .attr("transform", function (d) {
+                return "translate(" + source.y + "," + source.x + ")";
+            })
+            .remove();
+
+    nodeExit.select("circle")
+            .attr("r", 1e-6);
+
+    nodeExit.select("text")
+            .style("fill-opacity", 1e-6);
+
+    // Update the links…
+    var link = svg.selectAll("path.link")
+            .data(links, function (d) {
+                return d.target.id;
+            });
+
+    // Enter any new links at the parent's previous position.
+    link.enter().insert("path", "g")
+            .attr("class", "link")
+            .attr("d", function (d) {
+                var o = {x: source.x0, y: source.y0};
+                return diagonal({source: o, target: o});
+            });
+
+    // Transition links to their new position.
+    link.transition()
+            .duration(duration)
+            .attr("d", diagonal);
+
+    // Transition exiting nodes to the parent's new position.
+    link.exit().transition()
+            .duration(duration)
+            .attr("d", function (d) {
+                var o = {x: source.x, y: source.y};
+                return diagonal({source: o, target: o});
+            })
+            .remove();
+
+    // Stash the old positions for transition.
+    nodes.forEach(function (d) {
+        d.x0 = d.x;
+        d.y0 = d.y;
+    });
+}
+// end update
+
+
+// Toggle children on click.
+function click(d) {
+    if (d.children) {
+        d._children = d.children;
+        d.children = null;
+    } else {
+        d.children = d._children;
+        d._children = null;
+    }
+    update(d);
+}
+
+function tv() {
+    d3.json("http://www.yandaniang.com/TrafficVisualization/haoqicat.php", function (error, json) { // <-F
+        // 数组清空
+        treeData.length = 0;
+        // 添加元素
+        treeData.push(json);
+        root = treeData[0];
+        root.x0 = height / 2;
+        root.y0 = 0;
+        // 更新
+        update(root);
+        alert(treeData[0].name)
+    });
+}
+
+
+</script>
+</body>
+</html>
