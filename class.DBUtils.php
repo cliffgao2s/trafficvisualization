@@ -15,8 +15,8 @@ class DBUtils
     {
 
         $host = 'localhost';
-        $user = 'root';
-        $password = '901009';
+        $user = '****';
+        $password = '*****';
         $database = 'traffic_visualization';
         $port = '3306';
 
