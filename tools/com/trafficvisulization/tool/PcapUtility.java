@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by yzh on 14-10-30 01:19.
  * ProjectInfo NTV
- * ClassInfo PACKAGE_NAME.PcapUtility
+ * ClassInfo PcapUtility
  * 该类提供pcap的分割操作
  */
 public class PcapUtility {
@@ -35,7 +35,7 @@ public class PcapUtility {
 	}
 
 	/**
-	 * 将距离1970年1月1日0时0分的秒数化为人类刻度的形式
+	 * 将距离1970年1月1日0时0分的秒数化为对人类友好的形式
 	 *
 	 * @param seconds 距离1970年1月1日0时0分的秒数
 	 * @return yyyy-MM-dd HH:mm:ss的格式
@@ -65,7 +65,7 @@ public class PcapUtility {
 	 */
 	public byte[] readPcap(String path, int size) {
 
-		// 数组的大小为8M
+		// 数组的大小为size M
 		byte[] bytes = new byte[size * 1024 * 1024];
 		int used = 0;
 		FileInputStream inputStream = null;
@@ -311,7 +311,7 @@ public class PcapUtility {
 		byte[] bytes2 = {(byte) 0x66, (byte) 0x44, (byte) 0x03, (byte) 0x00};
 		byte[] bytes3 = {(byte) 0xD3, (byte) 0x36, (byte) 0x05, (byte) 0x00};
 		PcapUtility pu = new PcapUtility();
-		byte[] bs = pu.readPcap("/Users/yzh/Desktop/pcap包/login.pcap", 10);
+		byte[] bs = pu.readPcap("/Users/xxx/Desktop/pcap包/login.pcap", 10);
 		// System.out.println(bs.length);
 		// 获得一个报文的数据长度
 		byte[] lengthArray = {bs[32], bs[33], bs[34], bs[35]};
@@ -324,8 +324,8 @@ public class PcapUtility {
 		// 然后填充数据包的首部信息和数据包信息
 		System.arraycopy(bs, 24, pkt, 24, v + 16);
 
-		pu.writePcap("/Users/yzh/Desktop/pcap包/new.pcap", pkt);
-		pu.divideBigPcapByPacketsNumber("/Users/yzh/Desktop/download-fast.pcap", 20000, "/Users/yzh/Desktop/yan.pcap");
+		pu.writePcap("/Users/xxx/Desktop/pcap包/new.pcap", pkt);
+		pu.divideBigPcapByPacketsNumber("/Users/xxx/Desktop/download-fast.pcap", 20000, "/Users/xxx/Desktop/yan.pcap");
 
 	}
 
