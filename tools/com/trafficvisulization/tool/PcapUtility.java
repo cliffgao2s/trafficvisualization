@@ -276,6 +276,35 @@ public class PcapUtility {
 
 		return pcaps;
 	}
+	
+	/**
+	 * 将多个pcap包合并为同一个pcap包
+	 *
+	 * @param mergedPcaps 待合并的pcap包
+	 * @param toPcap      合并后的包
+	 * @return 合并之后的包名
+	 */
+	public String mergePcaps(List<String> mergedPcaps, String toPcap) {
+
+		StringBuilder sb = new StringBuilder();
+		// 前提条件是安装了Wireshark
+		sb.append("mergecap -w").append(" ").append(toPcap);
+		for (String pcap : mergedPcaps) {
+			sb.append(" ").append(pcap);
+		}
+
+		System.out.println(sb);
+		try {
+			Process pro = Runtime.getRuntime().exec(sb.toString());
+			pro.waitFor();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		return toPcap;
+	}
 
 	/**
 	 * 获得一个文件的字节数大小
